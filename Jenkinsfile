@@ -1,12 +1,6 @@
 pipeline{
-    agent any
+    agent none
     stages {
-            stage('env') {
-                steps {
-                    sh 'printenv'
-                }
-            }
-
         stage('Build') {
             agent {
                 docker {
@@ -14,9 +8,6 @@ pipeline{
                 }
             }
             steps {
-//                checkout scm
-//                env.COMMIT_HASH = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                sh "git rev-parse HEAD"
                 sh 'python -m py_compile sources/add2vals.py sources/calc.py'
             }
         }
@@ -65,13 +56,14 @@ pipeline{
             }
             steps {
                 sh 'pyinstaller --onefile sources/add2vals.py'
-                input message: "Build stage finished.(click to preceded)"
+//                input message: "Build stage finished.(click to preceded)"
+                sh 'ssh -o StrictHostKeyChecking=no '
 
             }
             post {
                 success {
                     archiveArtifacts 'dist/add2vals'
-                    githubNotify description: 'This is a shorted example',  status: 'SUCCESS'
+//                    githubNotify description: 'This is a shorted example',  status: 'SUCCESS'
                 }
 
             }
