@@ -72,7 +72,7 @@ pipeline{
             }
         }
 
-        stage 'Promotion' {
+        stage('Promotion') {
             input 'Deploy to Production?'
         }
 
