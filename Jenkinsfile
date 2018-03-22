@@ -52,7 +52,7 @@ pipeline{
 
             }
         }
-        stage('Deliver') {
+        stage('Create Artifacts') {
             agent {
                 docker {
                     image 'cdrx/pyinstaller-linux:python2'
@@ -71,14 +71,17 @@ pipeline{
 
             }
         }
+
+        stage 'Promotion' {
+            input 'Deploy to Production?'
+        }
+
         stage('Deploy'){
             agent { label 'master' }
             steps{
                 unstash 'exec_files'
                 sh "ls -la"
                 sh 'scp -r -o StrictHostKeyChecking=no dist/webapp root@172.17.0.3:/var/'
-                sh 'ssh -o StrictHostKeyChecking=no -l root 172.17.0.3 "nohup /var/webapp "'
-
                 }
 
             }
