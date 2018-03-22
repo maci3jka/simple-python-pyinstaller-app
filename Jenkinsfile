@@ -57,13 +57,27 @@ pipeline{
             steps {
                 sh 'pyinstaller --onefile sources/add2vals.py'
 //                input message: "Build stage finished.(click to preceded)"
-                sh 'ssh -o StrictHostKeyChecking=no '
+                stash includes: 'dist/add2vals', name: 'exec_files'
 
             }
             post {
                 success {
                     archiveArtifacts 'dist/add2vals'
 //                    githubNotify description: 'This is a shorted example',  status: 'SUCCESS'
+                }
+
+            }
+        }
+        stage('Deploy'){
+            agent { label 'master' }
+            steps{
+                unstash 'exec_files'
+                sh "ls -la"
+//                sh "ls -la dist/add2vals/"
+                sshagent(credentials: ['deploy-machine-key']) {
+                    // some block
+                    sh 'ssh -o StrictHostKeyChecking=no -l root 172.17.0.3 uname -a'
+                    sh 'scp -r -o StrictHostKeyChecking=no dist/add2vals root@172.17.0.3:/var/'
                 }
 
             }
