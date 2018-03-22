@@ -83,7 +83,6 @@ pipeline{
                 unstash 'exec_files'
                 sh 'scp -r -o StrictHostKeyChecking=no dist/webapp root@172.17.0.3:/var/'
                 }
-            }
         }
         stage('Smoke Test'){
             when {
