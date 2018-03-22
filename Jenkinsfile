@@ -70,8 +70,8 @@ pipeline{
                 }
 
             }
-        }         when {
-            branch 'master'
+        }
+
 
         stage('Deploy'){
             agent { label 'master' }
@@ -80,6 +80,5 @@ pipeline{
                 sh 'scp -r -o StrictHostKeyChecking=no dist/webapp root@172.17.0.3:/var/'
                 }
             }
-        }
         }
 }
