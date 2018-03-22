@@ -70,22 +70,16 @@ pipeline{
                 }
 
             }
-        }
-
-        stage('Promotion') {
-            steps{
-                input 'Deploy to Production?'
-            }
-        }
+        }         when {
+            branch 'master'
 
         stage('Deploy'){
             agent { label 'master' }
             steps{
                 unstash 'exec_files'
-                sh "ls -la"
                 sh 'scp -r -o StrictHostKeyChecking=no dist/webapp root@172.17.0.3:/var/'
                 }
-
             }
+        }
         }
 }
