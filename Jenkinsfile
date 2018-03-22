@@ -79,9 +79,21 @@ pipeline{
             }
                 agent { label 'master' }
             steps{
+                input message: 'Are you sure to deploy?'
                 unstash 'exec_files'
                 sh 'scp -r -o StrictHostKeyChecking=no dist/webapp root@172.17.0.3:/var/'
                 }
             }
+        }
+        stage('Smoke Test'){
+            when {
+                branch 'feature/Jenkinsfile'
+            }
+            agent { label 'master' }
+            steps {
+                sh 'ssh -o StrictHostKeyChecking=no root@172.17.0.3 ls -la /var/webapp'
+            }
+
+
         }
 }
