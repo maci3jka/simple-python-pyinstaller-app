@@ -75,7 +75,7 @@ pipeline{
 
         stage('Deploy'){
             when {
-                branch 'master'
+                branch 'feature/Jenkinsfile'
             }
                 agent { label 'master' }
             steps{
